@@ -69,14 +69,13 @@ arch.xml: $(OUT_ARCH_XML)
 
 # Generate the "default" rr_graph.xml we are going to patch using wire.
 OUT_RRXML_VIRT = $(OUT_DEV_DIR)/rr_graph.virt.xml
-$(OUT_RRXML_VIRT): $(TOP_DIR)/tests/1-wire/wire.eblif $(OUT_ARCH_XML)
+$(OUT_RRXML_VIRT): $(TOP_DIR)/common/wire.eblif $(OUT_ARCH_XML)
 	cd $(OUT_DEV_DIR); \
 	$(VPR) \
 		$(OUT_ARCH_XML) \
 		--device $(DEVICE) \
-		$(TOP_DIR)/tests/1-wire/wire.eblif \
+		$(TOP_DIR)/common/wire.eblif \
 		\
-		--timing_analysis off \
 		--route_chan_width 10 \
 		--min_route_chan_width_hint 1 \
 		--write_rr_graph $(OUT_RRXML_VIRT)
@@ -87,7 +86,7 @@ $(OUT_RRXML_VIRT): $(TOP_DIR)/tests/1-wire/wire.eblif $(OUT_ARCH_XML)
 # Generate the "real" rr_graph.xml from the default rr_graph.xml file
 OUT_RRXML_REAL = $(OUT_DEV_DIR)/rr_graph.real.xml
 $(OUT_RRXML_REAL): $(OUT_RRXML_VIRT) $(RR_PATCH_TOOL)
-	$(RR_PATCH_CMD) --read_rr_graph $(OUT_RRXML_VIRT) --write_rr_graph $(OUT_RRXML_REAL) 2>&1 | tee $(OUT_DEV_DIR)/rr_graph.real.out
+	$(RR_PATCH_CMD) 2>&1 | tee $(OUT_DEV_DIR)/rr_graph.real.out
 .PRECIOUS: $(OUT_RRXML_REAL)
 
 # Quick shortcuts
@@ -106,26 +105,32 @@ rr_graph.xml: rr_graph.real.xml
 ##########################################################################
 ##########################################################################
 
-SOURCE = $(basename $(wildcard *.v))
+SOURCE_E = $(basename $(wildcard *.eblif))
+SOURCE_V = $(basename $(wildcard *.v))
+SOURCE = $(SOURCE_V)$(SOURCE_E)
 $(info SOURCE = $(SOURCE))
 
-OUT_LOCAL = $(PWD)/build
+OUT_LOCAL = $(PWD)/build-$(FQDN)
 $(OUT_LOCAL):
 	mkdir -p $@
-
 
 ##########################################################################
 # Generate BLIF as start of vpr input.
 ##########################################################################
 
-# We have a Verilog file and use a Yosys command to convert it
 OUT_EBLIF=$(OUT_LOCAL)/$(SOURCE).eblif
+
+# We have a Verilog file and use a Yosys command to convert it
+ifneq ($(SOURCE_V),)
 $(OUT_EBLIF): $(SOURCE).v | $(OUT_LOCAL)
 	$(YOSYS) -p "$(YOSYS_SCRIPT) opt_clean; write_blif -attr -cname -conn -param $@" $<
+endif
 
 # We just have a BLIF file
-#$(OUT_LOCAL)/$(SOURCE).eblif: $(SOURCE).eblif | $(OUT_LOCAL)
-#	cp $< $@
+ifneq ($(SOURCE_E),)
+$(OUT_EBLIF): $(SOURCE).eblif | $(OUT_LOCAL)
+	cp $< $@
+endif
 
 # Always keep the eblif output
 .PRECIOUS: $(OUT_LOCAL)/$(SOURCE).eblif
@@ -223,8 +228,17 @@ analysis:
 	make $(OUT_ANALYSIS)
 .PHONY: analysis
 
+%.disp:
+	make VPR_ARGS="--disp on" $*
+
+%.echo:
+	make VPR_ARGS="--echo_file on" $*
+
 ##########################################################################
 ##########################################################################
+
+all: clean route
+	@true
 
 clean:
 	rm -rf $(OUT_LOCAL)
