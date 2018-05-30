@@ -20,7 +20,9 @@
       </pb_type>
       <interconnect>
        <direct name="I"  input="BEL_LT-LUT.in"   output="BLK_IG-LUT4.in"  />
-       <direct name="O"  input="BLK_IG-LUT4.out" output="BEL_LT-LUT.out"  />
+       <direct name="O"  input="BLK_IG-LUT4.out" output="BEL_LT-LUT.out"   >
+        <pack_pattern name="LUT+FF" in_port="BLK_IG-LUT4.out" out_port="BEL_LT-LUT.out" />
+       </direct>
       </interconnect>
      </mode>
      <mode name="SB_LUT4">
