@@ -136,7 +136,6 @@
   <direct name="LCOUT" input="BLK_IG-PLB_CELL[7].LCOUT" output="BLK_IG-PLB_LOCAL.LCOUT"  />
     -->
 
-  <!-- Fast carry chain -->
   <direct name="FCIN" input="BLK_IG-PLB_LOCAL.FCIN" output="BLK_IG-PLB_CELL[0].FCIN">
    <pack_pattern name="CARRYCHAIN" in_port="BLK_IG-PLB_LOCAL.FCIN" out_port="BLK_IG-PLB_CELL[0].FCIN"/>
   </direct>
@@ -164,6 +163,17 @@
   <direct name="FCOUT" input="BLK_IG-PLB_CELL[7].FCOUT" output="BLK_IG-PLB_LOCAL.FCOUT">
    <pack_pattern name="CARRYCHAIN" in_port="BLK_IG-PLB_CELL[7].FCOUT" out_port="BLK_IG-PLB_LOCAL.FCOUT"/>
   </direct>
+  <!-- Fast carry chain
+  <direct name="FCIN" input="BLK_IG-PLB_LOCAL.FCIN" output="BLK_IG-PLB_CELL[0].FCIN" />
+  <direct name="FCC0" input="BLK_IG-PLB_CELL[0].FCOUT" output="BLK_IG-PLB_CELL[1].FCIN" />
+  <direct name="FCC1" input="BLK_IG-PLB_CELL[1].FCOUT" output="BLK_IG-PLB_CELL[2].FCIN" />
+  <direct name="FCC2" input="BLK_IG-PLB_CELL[2].FCOUT" output="BLK_IG-PLB_CELL[3].FCIN" />
+  <direct name="FCC3" input="BLK_IG-PLB_CELL[3].FCOUT" output="BLK_IG-PLB_CELL[4].FCIN" />
+  <direct name="FCC4" input="BLK_IG-PLB_CELL[4].FCOUT" output="BLK_IG-PLB_CELL[5].FCIN" />
+  <direct name="FCC5" input="BLK_IG-PLB_CELL[5].FCOUT" output="BLK_IG-PLB_CELL[6].FCIN" />
+  <direct name="FCC6" input="BLK_IG-PLB_CELL[6].FCOUT" output="BLK_IG-PLB_CELL[7].FCIN" />
+  <direct name="FCOUT" input="BLK_IG-PLB_CELL[7].FCOUT" output="BLK_IG-PLB_LOCAL.FCOUT" />
+       -->
 
  </interconnect>
 

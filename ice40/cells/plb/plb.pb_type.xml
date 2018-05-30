@@ -52,6 +52,10 @@
   <direct name="BLK_IG-PLB_CELL.FCOUT" input="SB_CARRY.CO" output="BLK_IG-PLB_CELL.FCOUT">
    <pack_pattern name="CARRYCHAIN" in_port="SB_CARRY.CO" out_port="BLK_IG-PLB_CELL.FCOUT" />
   </direct>
+  <!--
+  <direct name="BLK_IG-PLB_CELL.FCIN" input="BLK_IG-PLB_CELL.FCIN" output="SB_CARRY.CI" />
+  <direct name="BLK_IG-PLB_CELL.FCOUT" input="SB_CARRY.CO" output="BLK_IG-PLB_CELL.FCOUT" />
+  -->
 
  </interconnect>
 </pb_type>
